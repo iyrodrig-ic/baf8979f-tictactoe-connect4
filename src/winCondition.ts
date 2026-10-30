@@ -156,3 +156,22 @@ export const createWinConditions = (size: number): WinCondition[] => {
         ...twoByTwoBoxWinConditions
     ]
 }
+
+export const createWinConditionTrackerMap = (size: number, winConditions: WinCondition[]): { [key: number]: WinConditionTracker[] } => {
+    const winConditionTrackerMap: { [key: number]: WinConditionTracker[] } = {}
+    winConditions.forEach(
+        (winCondition: WinCondition) => {
+            const winConditionTracker: WinConditionTracker = new WinConditionTracker(winCondition);
+            const locationKeys: number[] = winCondition.getLocationKeys();
+            locationKeys.forEach(
+                (locationKey: number) => {
+                    if (!(locationKey in winConditionTrackerMap)) {
+                        winConditionTrackerMap[locationKey] = [];
+                    }
+                    winConditionTrackerMap[locationKey].push(winConditionTracker);
+                }
+            )
+        }
+    )
+    return winConditionTrackerMap;
+}
