@@ -83,8 +83,8 @@ export const createWinConditions = (size: number): WinCondition[] => {
     const firstDiagonalWinCondition: WinCondition = new WinCondition(
         rowWinConditions[0].locations.map(
             (location: TicTacToeLocation) => ({
-                rowIndex: location.rowIndex,
-                columnIndex: location.rowIndex,
+                rowIndex: location.columnIndex,
+                columnIndex: location.columnIndex,
             })
         ), size
     );
@@ -157,9 +157,10 @@ export const createWinConditions = (size: number): WinCondition[] => {
     ]
 }
 
-export const createWinConditionTrackerMap = (size: number, winConditions: WinCondition[]): { [key: number]: WinConditionTracker[] } => {
+export const createWinConditionTrackerMap = (size: number, winConditions?: WinCondition[]): { [key: number]: WinConditionTracker[] } => {
     const winConditionTrackerMap: { [key: number]: WinConditionTracker[] } = {}
-    winConditions.forEach(
+    const definedWinConditions: WinCondition[] = winConditions ?? createWinConditions(size);
+    definedWinConditions.forEach(
         (winCondition: WinCondition) => {
             const winConditionTracker: WinConditionTracker = new WinConditionTracker(winCondition);
             const locationKeys: number[] = winCondition.getLocationKeys();

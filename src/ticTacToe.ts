@@ -1,17 +1,19 @@
 import { TicTacToeBoard } from "./shared.types";
 import { createWinConditionTrackerMap, getLocationKey, WinCondition, WinConditionTracker } from "./winCondition";
 
-class TicTacToe {
+export class TicTacToe {
     private winner: (string | null) = null;
     private openSpaces: number = 0;
     private board: (string | null)[][] | null = null;
     private processed: boolean = false;
     private winConditionTrackerMap: { [key: number]: WinConditionTracker[] } = {};
-    private winConditions: WinCondition[];
+    private winConditions?: WinCondition[];
 
-    constructor(board: TicTacToeBoard, winConditions: WinCondition[]) {
+    constructor(board: TicTacToeBoard, winConditions?: WinCondition[]) {
         this.board = board;
-        this.winConditions = winConditions;
+        if (winConditions) {
+            this.winConditions = winConditions;
+        }
     }
 
     private processBoard = (): void => {
