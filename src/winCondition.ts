@@ -31,6 +31,28 @@ export class WinConditionTracker {
     public getLocationKeys = (): number[] => this.winCondition.getLocationKeys()
 
     public processLocation = (player: string | null): void => {
-        // process location to determine winner
+        if (this.outcomeDetermined) {
+            return;
+        }
+        // Initial check
+        if (this.locationsToCheckCount === this.winCondition.locations.length) {
+            if (player !== null) {
+                this.currentWinner = player;
+                this.locationsToCheckCount -= 1;
+            } else {
+                this.locationsToCheckCount = 0;
+            }
+        } else if (this.currentWinner === player) {
+            // not initial check, keep going if same player
+            this.locationsToCheckCount -= 1;
+        } else {
+            // not same player, this win condition cannot be met
+            this.currentWinner = null;
+            this.locationsToCheckCount = 0;
+        }
+        if (this.locationsToCheckCount === 0) {
+            // keep current winner, no further processing needed
+            this.outcomeDetermined = true;
+        }
     }
 }
