@@ -84,4 +84,5 @@ class TicTacToe {
             this.processBoard();
         }
         return !this.anyMovesLeft();
+    }
 }
