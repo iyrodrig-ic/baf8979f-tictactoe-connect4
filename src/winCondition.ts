@@ -56,3 +56,103 @@ export class WinConditionTracker {
         }
     }
 }
+
+// create win conditions, assume square board of size `size` > 0
+export const createWinConditions = (size: number): WinCondition[] => {
+    const rowWinConditions: WinCondition[] = [];
+    for (let row: number = 0; row < size; row++) {
+        let locations: TicTacToeLocation[] = [];
+        for (let column: number = 0; column < size; column++) {
+            locations.push({
+                rowIndex: row,
+                columnIndex: column,
+            });
+        }
+        rowWinConditions.push(new WinCondition(locations, size));
+    }
+
+    const columnWinConditions: WinCondition[] = rowWinConditions.map(
+        ((winCondition: WinCondition) => new WinCondition(winCondition.locations.map(
+            (location: TicTacToeLocation) => ({
+                rowIndex: location.columnIndex,
+                columnIndex: location.rowIndex,
+            })
+        ), size))
+    );
+
+    const firstDiagonalWinCondition: WinCondition = new WinCondition(
+        rowWinConditions[0].locations.map(
+            (location: TicTacToeLocation) => ({
+                rowIndex: location.rowIndex,
+                columnIndex: location.rowIndex,
+            })
+        ), size
+    );
+
+    const secondDiagonalWinCondition: WinCondition = new WinCondition(
+        firstDiagonalWinCondition.locations.map(
+            (location: TicTacToeLocation) => ({
+                rowIndex: location.rowIndex,
+                columnIndex: size - 1 - location.columnIndex,
+            })
+        ), size
+    );
+
+    const cornersWinCondition: WinCondition = new WinCondition(
+        [
+            {
+                rowIndex: 0,
+                columnIndex: 0,
+            },
+            {
+                rowIndex: 0,
+                columnIndex: size - 1,
+            },
+            {
+                rowIndex: size - 1,
+                columnIndex: 0,
+            },
+            {
+                rowIndex: size - 1,
+                columnIndex: size - 1,
+            }
+        ],
+        size
+    );
+
+    const twoByTwoBoxWinConditions: WinCondition[] = [];
+    for (let row: number = 0; row < size - 1; row++) {
+        for (let column: number = 0; column < size - 1; column++) {
+            twoByTwoBoxWinConditions.push(new WinCondition(
+                [
+                    {
+                        rowIndex: row,
+                        columnIndex: column,
+                    },
+                    {
+                        rowIndex: row + 1,
+                        columnIndex: column,
+                    },
+                    {
+                        rowIndex: row,
+                        columnIndex: column + 1,
+                    },
+                    {
+                        rowIndex: row + 1,
+                        columnIndex: column + 1,
+                    }
+                ],
+                size
+            ));
+        }
+    }
+
+    return [
+        ...rowWinConditions,
+        ...columnWinConditions,
+        firstDiagonalWinCondition,
+        secondDiagonalWinCondition,
+        cornersWinCondition,
+        ...twoByTwoBoxWinConditions
+    ]
+}
